@@ -10,6 +10,7 @@ dependencies = [
     "langchain-community>=0.3.31",
     "langchain-ollama>=0.3.10",
     "langchain-postgres>=0.0.16",
+    "langgraph>=1.0.0",
     "psycopg2-binary>=2.9.11",
     "pymupdf>=1.26.5",
 ]
