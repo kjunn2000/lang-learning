@@ -34,10 +34,29 @@ async def main():
     )
 
     retriever = db.as_retriever()
+    prompt = ChatPromptTemplate.from_template(
+        """
+            You are a helpful AI assistant. Use the following pieces of context to answer the question at the end.
+            If you don't know the answer, just say that you don't know, don't try to make
+            up an answer.
+            {context}
 
-    docs = retriever.invoke("Who are the founders of Meta?")
+            Question: {question}
+        """
+    )
+    llm = OllamaLLM(model="phi3")
 
-    print(docs)
+    @chain
+    def qa(input):
+        docs = retriever.invoke(input)
+        formatted = prompt.invoke({"context": docs, "question": input})
+        answer = llm.invoke(formatted)
+        return answer
+
+    ans = qa.invoke(
+        "I woke up and brushed my teeth because the moon was loud, and my dog said the internet was broken before my piano lesson. Anyway, when is Meta founded and by who did it, or was it raining?"
+    )
+    print(ans)
 
 
 if __name__ == "__main__":
